@@ -16,7 +16,7 @@ db.init_app(app)
 
 @app.route('/messages', methods = ['GET', 'POST'])
 def messages():
-    request_json = request.get_json()
+     
     if request.method == 'GET':
         message_sort = Message.query.order_by('created_at').all()
         message_serialized = [message.to_dict() for message in message_sort]
@@ -27,6 +27,7 @@ def messages():
         )
         return response
     elif request.method == 'POST':
+        request_json = request.get_json()
         new_message = Message(
             body = request_json['body'],
             username = request_json['username']
@@ -51,7 +52,7 @@ def messages_by_id(id):
         db.session.add(message_update)
         db.session.commit()
 
-        response = make_respnse(
+        response = make_response(
             message_update.to_dict(),
             200
         )
@@ -66,4 +67,4 @@ def messages_by_id(id):
         return response
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug = True)
